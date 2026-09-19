@@ -78,7 +78,7 @@ spec:
 {{- include "concourse.postgresql.env" . | indent 12 }}
           volumeMounts:
           {{- if not (eq .Values.concourse.web.postgres.sslmode "disable") }}
-            - name: postgresql-keys
+            - name: trust
               mountPath: {{ .Values.web.postgresqlSecretsPath | quote }}
               readOnly: true
           {{- end }}
@@ -1651,7 +1651,7 @@ spec:
               readOnly: true
             {{- end }}
             {{- if not (eq .Values.concourse.web.postgres.sslmode "disable") }}
-            - name: postgresql-keys
+            - name: trust
               mountPath: {{ .Values.web.postgresqlSecretsPath | quote }}
               readOnly: true
             {{- end }}
@@ -1773,22 +1773,6 @@ spec:
                 path: ca.cert
             {{- end }}
         {{- end }}
-        {{- if not (eq .Values.concourse.web.postgres.sslmode "disable") }}
-        - name: postgresql-keys
-          secret:
-            secretName: {{ template "concourse.web.fullname" . }}
-            # Has to be 0600 for now. Can revert back to 0400 once
-            # https://github.com/lib/pq/issues/1257 is resolved and Dex
-            # upgrades to a new version with the fixed lib/pq release
-            defaultMode: 0600
-            items:
-              - key: postgresql-ca-cert
-                path: ca.cert
-              - key: postgresql-client-cert
-                path: client.cert
-              - key: postgresql-client-key
-                path: client.key
-        {{- end }}
         {{- if .Values.concourse.web.syslog.enabled }}
         - name: syslog-keys
           secret:
@@ -1834,4 +1818,13 @@ spec:
               - key: oidc-ca-cert
                 path: oidc_ca.cert
               {{- end }}
+        {{- if (not (eq .Values.concourse.web.postgres.sslmode "disable")) }}
+        - name: trust
+          secret:
+            secretName: trust
+            defaultMode: 0400
+            items:
+              - key: ca.crt
+                path: ca.cert
+        {{- end }}
 {{- end }}
