@@ -3,7 +3,7 @@
 {{- $route := .Values.web.route -}}
 {{- $releaseName := .Release.Name -}}
 {{- $serviceName := include "concourse.web.fullname" . -}}
-{{- $servicePort := .Values.concourse.web.bindPort -}}
+{{- $servicePort := ternary .Values.concourse.web.tls.bindPort .Values.concourse.web.bindPort .Values.concourse.web.tls.enabled -}}
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
