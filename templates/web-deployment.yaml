@@ -1726,12 +1726,12 @@ spec:
         {{- if not .Values.concourse.web.letsEncrypt.enabled }}
         - name: web-tls
           secret:
-            secretName: {{ template "concourse.web.fullname" . }}
+            secretName: {{ template "concourse.web.fullname" . }}-tls
             defaultMode: 0400
             items:
-              - key: web-tls-cert
+              - key: tls.crt
                 path: client.cert
-              - key: web-tls-key
+              - key: tls.key
                 path: client.key
               {{- if .Values.secrets.webTlsCaCert }}
               - key: web-tls-ca-cert
