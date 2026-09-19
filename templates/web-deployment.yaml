@@ -1449,7 +1449,7 @@ spec:
             {{- end }}
             {{- if .Values.concourse.web.auth.oidc.useCaCert }}
             - name: CONCOURSE_OIDC_CA_CERT
-              value: "{{ .Values.web.authSecretsPath }}/oidc_ca.cert"
+              value: "{{ .Values.web.caCertPath }}/ca.crt"
             {{- end }}
             {{- if .Values.concourse.web.auth.oidc.skipSslValidation }}
             - name: CONCOURSE_OIDC_SKIP_SSL_VALIDATION
@@ -1668,6 +1668,11 @@ spec:
             - name: auth-keys
               mountPath: {{ .Values.web.authSecretsPath | quote }}
               readOnly: true
+            {{- if .Values.concourse.web.auth.oidc.useCaCert }}
+            - name: trust
+              mountPath: {{ .Values.web.caCertPath | quote }}
+              readOnly: true
+            {{- end }}
           {{- if .Values.web.securityContext }}
           securityContext:
           {{- toYaml .Values.web.securityContext | nindent 12 }}
@@ -1814,17 +1819,19 @@ spec:
               - key: oauth-ca-cert
                 path: oauth_ca.cert
               {{- end }}
-              {{- if .Values.concourse.web.auth.oidc.useCaCert }}
-              - key: oidc-ca-cert
-                path: oidc_ca.cert
-              {{- end }}
-        {{- if (not (eq .Values.concourse.web.postgres.sslmode "disable")) }}
+        {{- if or .Values.concourse.web.auth.oidc.useCaCert (not (eq .Values.concourse.web.postgres.sslmode "disable")) }}
         - name: trust
           secret:
             secretName: trust
             defaultMode: 0400
             items:
+            {{- if .Values.concourse.web.auth.oidc.useCaCert }}
+              - key: ca.crt
+                path: ca.crt
+            {{- end }}
+            {{- if not (eq .Values.concourse.web.postgres.sslmode "disable") }}
               - key: ca.crt
                 path: ca.cert
+            {{- end }}
         {{- end }}
 {{- end }}
