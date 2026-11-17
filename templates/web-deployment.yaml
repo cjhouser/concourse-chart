@@ -1464,12 +1464,12 @@ spec:
             - name: CONCOURSE_OIDC_CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "concourse.web.fullname" . }}
+                  name: {{ .Values.web.oidcExistingSecret | default (include "concourse.web.fullname" .) }}
                   key: oidc-client-id
             - name: CONCOURSE_OIDC_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "concourse.web.fullname" . }}
+                  name: {{ .Values.web.oidcExistingSecret | default (include "concourse.web.fullname" .) }}
                   key: oidc-client-secret
             {{- if .Values.concourse.web.auth.oidc.scope }}
             - name: CONCOURSE_OIDC_SCOPE
