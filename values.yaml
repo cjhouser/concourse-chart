@@ -2653,6 +2653,10 @@ web:
     ##
     existingSecret: ""
 
+  ## Source OIDC client ID and client Secret from an existing Secret. Must
+  ## contain the keys `oidc-client-id` and `oidc-client-secret`.
+  oidcExistingSecret: ""
+
 ## Configuration values for Concourse Worker components.
 ## For more information regarding the characteristics of
 ## Concourse Workers, see https://concourse-ci.org/concourse-worker.html

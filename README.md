@@ -307,6 +307,7 @@ The following table lists the configurable parameters of the Concourse chart and
 | `web.tls.existingSecret` | Name of a Secret where the server certificate and private key are stored. | `nil` |
 | `web.tls.certSecretKey` | Name of the key in a Secret where the server certificate is stored. | `web-tls-cert` |
 | `web.tls.keySecretKey` | Name of the key in a Secret where the private key is stored. | `web-tls-key` |
+| `web.tls.oidcExsitingSecret` | Name of a Secret where OIDC client id and client secret are stored. | `nil` |
 | `worker.additionalAffinities` | Additional affinities to apply to worker pods. E.g: node affinity | `{}` |
 | `worker.additionalVolumeMounts` | VolumeMounts to be added to the worker pods | `nil` |
 | `worker.additionalPorts` | Additional ports to be added to worker pods | `[]` |

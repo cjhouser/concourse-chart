@@ -1,0 +1,77 @@
+suite: OIDC
+
+tests:
+  - it: Default To Singlar Secret
+    set:
+      concourse:
+        web:
+          auth:
+            oidc:
+              enabled: true
+      secrets:
+        oidcClientId: "something"
+        oidcClientSecret: "ortheother"
+    template: web-deployment.yaml
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: CONCOURSE_OIDC_CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: RELEASE-NAME-web
+                key: oidc-client-id
+          any: true
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: CONCOURSE_OIDC_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: RELEASE-NAME-web
+                key: oidc-client-secret
+
+  - it: Mount Existing Secret
+    set:
+      concourse:
+        web:
+          auth:
+            oidc:
+              enabled: true
+      web:
+        oidcExistingSecret: some-secret
+    template: web-deployment.yaml
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: CONCOURSE_OIDC_CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: some-secret
+                key: oidc-client-id
+          any: true
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: CONCOURSE_OIDC_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: some-secret
+                key: oidc-client-secret
+
+  - it: Keys Removed From Singluar Secret
+    set:
+      concourse:
+        web:
+          auth:
+            oidc:
+              enabled: true
+      web:
+        oidcExistingSecret: some-secret
+    template: web-secrets.yaml
+    asserts:
+      - notExists:
+          path: data.oidc-client-id
+      - notExists:
+          path: data.oidc-client-secret
