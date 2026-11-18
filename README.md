@@ -237,6 +237,8 @@ The following table lists the configurable parameters of the Concourse chart and
 | `web.route.hostnames` | Concourse Web HTTPRoutes Hostnames | `[]` |
 | `web.route.parentRefs` | Concourse Web HTTPRoute parentRefs (gateways) | `[]` |
 | `web.route.labels` | Concourse Web HTTPRoute labels | `[]` |
+| `web.route.tls.enabled` | Configure the gateway to encrypt web traffic to the Pod using TLS | `false` |
+| `web.route.tls.trustStore` | The name of a ConfigMap with a `ca.crt` key containing a CA bundle that the gateway uses to validate the certificate that the web Pods present. The cert the web pods present should list the name of web's Service as a SAN. | `nil` |
 | `web.keySecretsPath` | Specify the mount directory of the web keys secrets | `/concourse-keys` |
 | `web.labels`| Additional labels to be added to the web deployment `metadata.labels` | `{}` |
 | `web.deploymentAnnotations` | Additional annotations to be added to the web deployment `metadata.annotations` | `{}` |

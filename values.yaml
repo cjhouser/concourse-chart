@@ -2640,6 +2640,18 @@ web:
     ## - "concourse.example.com"
     hostnames: []
 
+    ## Configure the gateway to encrypt web traffic to the Pod using TLS.
+    ##
+    tls:
+      enabled: false
+
+      ## The name of a ConfigMap with a `ca.crt` key containing a CA bundle
+      ## that the gateway uses to validate the certificate that the web Pods
+      ## present. The cert the web pods present should list the name of web's
+      ## Service as a SAN.
+      ##
+      trustStore: ""
+
   ## TLS configuration for the web Pods.
   ##
   tls:
