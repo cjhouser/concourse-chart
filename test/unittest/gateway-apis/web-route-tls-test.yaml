@@ -1,0 +1,90 @@
+suite: Web Route TLS
+
+tests:
+  - it: LetsEncrypt TLS
+    set:
+      concourse:
+        web:
+          externalUrl: https://hello.com
+          tls:
+            enabled: true
+          letsEncrypt:
+            enabled: true
+      web:
+        route:
+          enabled: true
+          tls:
+            enabled: true
+    template: web-route.yaml
+    asserts:
+      - equal:
+          path: spec.validation.wellKnownCACertificates
+          value: System
+        documentIndex: 1
+      - equal:
+          path: spec.validation.hostname
+          value: hello.com
+        documentIndex: 1
+      - notExists:
+          path: spec.validation.caCertificateRefs
+        documentIndex: 1
+
+  - it: No Custom Trust Bundle When Lets Encrypt Enabled
+    set:
+      concourse:
+        web:
+          externalUrl: https://hello.com
+          tls:
+            enabled: true
+          letsEncrypt:
+            enabled: true
+      web:
+        route:
+          enabled: true
+          tls:
+            enabled: true
+            trustStore: a-configmap
+    template: web-route.yaml
+    asserts:
+      - equal:
+          path: spec.validation.wellKnownCACertificates
+          value: System
+        documentIndex: 1
+      - equal:
+          path: spec.validation.hostname
+          value: hello.com
+        documentIndex: 1
+      - notExists:
+          path: spec.validation.caCertificateRefs
+        documentIndex: 1
+
+  - it: TLS Enabled On Route
+    set:
+      concourse:
+        web:
+          externalUrl: https://hello.com
+          tls:
+            enabled: true
+      web:
+        route:
+          enabled: true
+          tls:
+            enabled: true
+            trustStore: a-configmap
+      secrets:
+        create: false
+    template: web-route.yaml
+    asserts:
+      - hasDocuments:
+          count: 2
+      - notExists:
+          path: spec.validation.wellKnownCACertificates
+        documentIndex: 1
+      - equal:
+          path: spec.validation.hostname
+          value: release-name-web
+        documentIndex: 1
+      - equal:
+          path: spec.validation.caCertificateRefs[0].name
+          value: a-configmap
+        documentIndex: 1

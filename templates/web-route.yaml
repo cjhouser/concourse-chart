@@ -3,7 +3,7 @@
 {{- $route := .Values.web.route -}}
 {{- $releaseName := .Release.Name -}}
 {{- $serviceName := include "concourse.web.fullname" . -}}
-{{- $servicePort := .Values.concourse.web.bindPort -}}
+{{- $servicePort := ternary .Values.concourse.web.tls.bindPort .Values.concourse.web.bindPort (and .Values.concourse.web.tls.enabled .Values.web.route.tls.enabled) -}}
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
@@ -38,5 +38,27 @@ spec:
     - name: {{ $serviceName }}
       port: {{ $servicePort }}
       namespace: {{ .Release.Namespace | quote }}
+{{- if and .Values.concourse.web.tls.enabled .Values.web.route.tls.enabled }}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: BackendTLSPolicy
+metadata:
+  name: {{ template "concourse.web.fullname" . }}
+spec:
+  targetRefs:
+  - kind: Service
+    name: {{ template "concourse.web.fullname" . }}
+    sectionName: {{ $servicePort }}
+  validation:
+    {{- if .Values.concourse.web.letsEncrypt.enabled }}
+    wellKnownCACertificates: System
+    hostname: {{ (urlParse .Values.concourse.web.externalUrl).host }}
+    {{- else }}
+    caCertificateRefs:
+    - kind: ConfigMap
+      name: {{ .Values.web.route.tls.trustStore }}
+    hostname: {{ include "concourse.web.fullname" . | lower }}
+    {{- end }}
+{{- end }}
 {{- end -}}
 {{- end -}}
