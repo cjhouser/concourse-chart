@@ -509,9 +509,9 @@ Return concourse environment variables for postgresql configuration
 - name: CONCOURSE_POSTGRES_SSLNEGOTIATION
   value: {{ .Values.concourse.web.postgres.sslNegotiation | quote }}
 {{- end }}
-{{- if .Values.secrets.postgresCaCert }}
+{{- if or .Values.web.trust.bundle .Values.web.trust.existingConfigMap }}
 - name: CONCOURSE_POSTGRES_CA_CERT
-  value: "{{ .Values.web.postgresqlSecretsPath }}/ca.cert"
+  value: "/trust/ca.crt"
 {{- end }}
 {{- if .Values.secrets.postgresClientCert }}
 - name: CONCOURSE_POSTGRES_CLIENT_CERT

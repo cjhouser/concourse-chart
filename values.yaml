@@ -677,7 +677,7 @@ concourse:
       lookupTemplates: []
 
       ## if the Vault server is using a self-signed certificate, set this to true,
-      ## and provide a value for the cert in secrets (field `vault-ca-cert`).
+      ## and configure a trust bundle via `web.trust`.
       ##
       useCaCert: false
 
@@ -1115,7 +1115,7 @@ concourse:
       drainInterval: 30s
 
       ## If the syslog server is using a self-signed certificate, set this to true,
-      ## and provide a value for the cert in secrets (`syslog-ca-cert`).
+      ## and configure a trust bundle via `web.trust`.
       ##
       useCaCert: false
 
@@ -2307,11 +2307,8 @@ web:
   ##
   keySecretsPath: "/concourse-keys"
   teamSecretsPath: "/team-authorized-keys"
-  authSecretsPath: "/concourse-auth"
   vaultSecretsPath: "/concourse-vault"
-  credhubSecretsPath: "/concourse-credhub"
   postgresqlSecretsPath: "/concourse-postgresql"
-  syslogSecretsPath: "/concourse-syslog"
   tlsSecretsPath: "/concourse-web-tls"
   conjurSecretsPath: "/concourse-conjur"
 
@@ -2668,6 +2665,29 @@ web:
   ## Source OIDC client ID and client Secret from an existing Secret. Must
   ## contain the keys `oidc-client-id` and `oidc-client-secret`.
   oidcExistingSecret: ""
+
+  ## Configure the trust bundle used to validate certificates when web
+  ## reaches out to another server.
+  ##
+  trust:
+    ## Configure the trust bundle directly in values.
+    ## bundle: |-
+    ##   -----BEGIN CERTIFICATE-----
+    ##   ....
+    ##   -----END CERTIFICATE-----
+    ##   -----BEGIN CERTIFICATE-----
+    ##   ....
+    ##   -----END CERTIFICATE-----
+    ##
+    bundle: ""
+
+    ## Load the trust bundle from an existing ConfigMap.
+    existingConfigMap: ""
+
+  ## Configure whether web validates the certificate presented
+  ## by conjur. web will use the bundle defined in `.web.trust`.
+  ##
+  conjurUseCaCert: true
 
 ## Configuration values for Concourse Worker components.
 ## For more information regarding the characteristics of
@@ -3291,11 +3311,6 @@ secrets:
   webTlsCert:
   webTlsKey:
 
-  ## The TLS CA certificate for the web component to be able to terminate
-  ## TLS connections. Enables mTLS.
-  ##
-  webTlsCaCert:
-
   ## Concourse Host Keys.
   ## Ref: https://concourse-ci.org/install.html#generating-keys
   ##
@@ -3425,7 +3440,6 @@ secrets:
   ##
   postgresUser:
   postgresPassword:
-  postgresCaCert:
   postgresClientCert:
   postgresClientKey:
 
@@ -3451,12 +3465,6 @@ secrets:
   awsSecretsmanagerSecretKey:
   awsSecretsmanagerSessionToken:
 
-  ## Secrets for using CredHub as a credential manager.
-  ##
-  ## Value of PEM-encoded CA cert file to use to verify the CredHub server SSL cert.
-  ##
-  credhubCaCert:
-
   ## Client ID for CredHub authorization.
   ##
   credhubClientId:
@@ -3477,7 +3485,6 @@ secrets:
   ##
   cfClientId:
   cfClientSecret:
-  cfCaCert:
 
   ## Secrets for BitbucketCloud OAuth.
   ##
@@ -3488,43 +3495,25 @@ secrets:
   ##
   githubClientId:
   githubClientSecret:
-  githubCaCert:
 
   ## Secrets for GitLab OAuth.
   ##
   gitlabClientId:
   gitlabClientSecret:
 
-  ## Secrets for LDAP Auth.
-  ##
-  ldapCaCert:
-
-  ## Secrets for SAML Auth.
-  ##
-  samlCaCert:
-
   ## Secrets for generic OAuth.
   ##
   oauthClientId:
   oauthClientSecret:
-  oauthCaCert:
 
   ## Secrets for oidc OAuth.
   ##
   oidcClientId:
   oidcClientSecret:
-  oidcCaCert:
 
   ## Secrets for Microsoft Auth.
   microsoftClientId:
   microsoftClientSecret:
-
-  ## Secrets for using Hashcorp Vault as a credential manager.
-  ##
-  ## if the Vault server is using a self-signed certificate, provide the CA public key.
-  ## the value will be written to /concourse-vault/ca.cert
-  ##
-  vaultCaCert:
 
   ## initial periodic token issued for concourse
   ## Ref: https://www.vaultproject.io/docs/concepts/tokens.html#periodic-tokens
@@ -3556,10 +3545,6 @@ secrets:
   ##
   influxdbPassword:
 
-  ## SSL certificate used to verify the Syslog server for draining build logs.
-  ##
-  syslogCaCert:
-
   ## Secrets for Conjur credentials manager.
   #
   # Org account.
@@ -3573,6 +3558,3 @@ secrets:
 
   # Token file used if conjur instance is running in k8s or iam. E.g. /path/to/token_file
   conjurAuthnTokenFile:
-
-  # CA Certificate to specify if conjur instance is deployed with a self-signed cert
-  conjurCACert:
