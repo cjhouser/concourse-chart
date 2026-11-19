@@ -18,3 +18,7 @@
 {{- if and (and (not .Values.concourse.web.letsEncrypt.enabled) .Values.web.route.tls.enabled) (not .Values.web.route.tls.trustStore) }}
 {{- required "web.route.tls.trustStore must be set when web.route.tls.enabled is true and concourse.letsEncrypt.enabled is false" "" }}
 {{ end }}
+
+{{- if and .Values.web.trust.bundle .Values.web.trust.existingConfigMap }}
+{{- required "web.trust.bundle and web.trust.exstingConfigMap are mutually exclusive" "" }}
+{{ end }}

@@ -152,22 +152,18 @@ The following table lists the configurable parameters of the Concourse chart and
 | `secrets.awsSsmSessionToken` | AWS Session Token for SSM access | `nil` |
 | `secrets.bitbucketCloudClientId` | Client ID for the BitbucketCloud OAuth | `nil` |
 | `secrets.bitbucketCloudClientSecret` | Client Secret for the BitbucketCloud OAuth | `nil` |
-| `secrets.cfCaCert` | CA certificate for cf auth provider | `nil` |
 | `secrets.cfClientId` | Client ID for cf auth provider | `nil` |
 | `secrets.cfClientSecret` | Client secret for cf auth provider | `nil` |
 | `secrets.conjurAccount` | Account for Conjur auth provider | `nil` |
 | `secrets.conjurAuthnLogin` | Host username for Conjur auth provider | `nil` |
 | `secrets.conjurAuthnApiKey` | API key for host used for Conjur auth provider. Either API key or token file can be used, but not both. | `nil` |
 | `secrets.conjurAuthnTokenFile` | Token file used for Conjur auth provider if running in Kubernetes or IAM. Either token file or API key can be used, but not both. | `nil` |
-| `secrets.conjurCACert` | CA Cert used if Conjur instance is deployed with a self-signed certificate  | `nil` |
 | `secrets.create` | Create the secret resource from the following values. *See [Secrets](#secrets)* | `true` |
-| `secrets.credhubCaCert` | Value of PEM-encoded CA cert file to use to verify the CredHub server SSL cert. | `nil` |
 | `secrets.credhubClientId` | Client ID for CredHub authorization. | `nil` |
 | `secrets.credhubClientSecret` | Client secret for CredHub authorization. | `nil` |
 | `secrets.credhubClientKey` | Client key for Credhub authorization. | `nil` |
 | `secrets.credhubClientCert` | Client cert for Credhub authorization | `nil` |
 | `secrets.encryptionKey` | current encryption key | `nil` |
-| `secrets.githubCaCert` | CA certificate for Enterprise Github OAuth | `nil` |
 | `secrets.githubClientId` | Application client ID for GitHub OAuth | `nil` |
 | `secrets.githubClientSecret` | Application client secret for GitHub OAuth | `nil` |
 | `secrets.gitlabClientId` | Application client ID for GitLab OAuth | `nil` |
@@ -175,34 +171,27 @@ The following table lists the configurable parameters of the Concourse chart and
 | `secrets.hostKeyPub` | Concourse Host Public Key | *See [values.yaml](values.yaml)* |
 | `secrets.hostKey` | Concourse Host Private Key | *See [values.yaml](values.yaml)* |
 | `secrets.influxdbPassword` | Password used to authenticate with influxdb | `nil` |
-| `secrets.ldapCaCert` | CA Certificate for LDAP | `nil` |
 | `secrets.localUsers` | Create concourse local users. Default username and password are `test:test` *See [values.yaml](values.yaml)* |
 | `secrets.microsoftClientId` | Client ID for Microsoft authorization. | `nil ` |
 | `secrets.microsoftClientSecret` | Client secret for Microsoft authorization. | `nil` |
-| `secrets.oauthCaCert` | CA certificate for Generic OAuth | `nil` |
 | `secrets.oauthClientId` | Application client ID for Generic OAuth | `nil` |
 | `secrets.oauthClientSecret` | Application client secret for Generic OAuth | `nil` |
-| `secrets.oidcCaCert` | CA certificate for OIDC Oauth | `nil` |
 | `secrets.oidcClientId` | Application client ID for OIDI OAuth | `nil` |
 | `secrets.oidcClientSecret` | Application client secret for OIDC OAuth | `nil` |
 | `secrets.oldEncryptionKey` | old encryption key, used for key rotation | `nil` |
-| `secrets.postgresCaCert` | PostgreSQL CA certificate | `nil` |
 | `secrets.postgresClientCert` | PostgreSQL Client certificate | `nil` |
 | `secrets.postgresClientKey` | PostgreSQL Client key | `nil` |
 | `secrets.postgresPassword` | PostgreSQL User Password | `nil` |
 | `secrets.postgresUser` | PostgreSQL User Name | `nil` |
 | `secrets.samlCaCert` | CA Certificate for SAML | `nil` |
 | `secrets.sessionSigningKey` | Concourse Session Signing Private Key | *See [values.yaml](values.yaml)* |
-| `secrets.syslogCaCert` | SSL certificate to verify Syslog server | `nil` |
 | `secrets.teamAuthorizedKeys` | Array of team names and worker public keys for external workers | `nil` |
 | `secrets.vaultAuthParam` | Paramter to pass when logging in via the backend | `nil` |
-| `secrets.vaultCaCert` | CA certificate use to verify the vault server SSL cert | `nil` |
 | `secrets.vaultClientCert` | Vault Client Certificate | `nil` |
 | `secrets.vaultClientKey` | Vault Client Key | `nil` |
 | `secrets.vaultClientToken` | Vault periodic client token | `nil` |
 | `secrets.webTlsCert` | TLS certificate for the web component to terminate TLS connections | `nil` |
 | `secrets.webTlsKey` | An RSA private key, used to encrypt HTTPS traffic  | `nil` |
-| `secrets.webTlsCaCert` | TLS CA certificate for the web component to terminate TLS connections | `nil` |
 | `secrets.workerKeyPub` | Concourse Worker Public Key | *See [values.yaml](values.yaml)* |
 | `secrets.workerKey` | Concourse Worker Private Key | *See [values.yaml](values.yaml)* |
 | `secrets.workerAdditionalCerts` | Concourse Worker Additional Certificates | *See [values.yaml](values.yaml)* |
@@ -214,8 +203,6 @@ The following table lists the configurable parameters of the Concourse chart and
 | `web.additionalVolumeMounts` | VolumeMounts to be added to the web pods | `nil` |
 | `web.additionalVolumes` | Volumes to be added to the web pods | `nil` |
 | `web.annotations`| Annotations to be added to the web pods | `{}` |
-| `web.authSecretsPath` | Specify the mount directory of the web auth secrets | `/concourse-auth` |
-| `web.credhubSecretsPath` | Specify the mount directory of the web credhub secrets | `/concourse-credhub` |
 | `web.datadog.agentHostUseHostIP` | Use IP of Pod's node overrides `agentHost` | `false` |
 | `web.datadog.agentHost` | Datadog Agent host | `127.0.0.1` |
 | `web.datadog.agentPort` | Datadog Agent port | `8125` |
@@ -295,7 +282,6 @@ The following table lists the configurable parameters of the Concourse chart and
 | `web.databaseInitContainers` | Array of database init containers to run before the Concourse database migrations are applied | `nil` |
 | `web.extraInitContainers` | Array of extra init containers to run before the Concourse web container | `nil` |
 | `web.strategy` | Strategy for updates to deployment. | `{}` |
-| `web.syslogSecretsPath` | Specify the mount directory of the web syslog secrets | `/concourse-syslog` |
 | `web.tlsSecretsPath` | Where in the container the web TLS secrets should be mounted | `/concourse-web-tls` |
 | `web.tolerations` | Tolerations for the web nodes | `[]` |
 | `web.vaultSecretsPath` | Specify the mount directory of the web vault secrets | `/concourse-vault` |
@@ -310,6 +296,9 @@ The following table lists the configurable parameters of the Concourse chart and
 | `web.tls.certSecretKey` | Name of the key in a Secret where the server certificate is stored. | `web-tls-cert` |
 | `web.tls.keySecretKey` | Name of the key in a Secret where the private key is stored. | `web-tls-key` |
 | `web.tls.oidcExsitingSecret` | Name of a Secret where OIDC client id and client secret are stored. | `nil` |
+| `web.trust.bundle` | The contents of a trust bundle. Web will use this to validate certificates presented by servers it reaches out to. | `nil` |
+| `web.trust.exsitingConfigMap` | The name of an existing ConfigMap with at trust bundle in the `ca.crt` key. Web will use this to validate certificates presented by servers it reaches out to. | `nil` |
+| `web.conjurUseCaCert` | Web will validate the cert presented by conjur when this is true. | `true` |
 | `worker.additionalAffinities` | Additional affinities to apply to worker pods. E.g: node affinity | `{}` |
 | `worker.additionalVolumeMounts` | VolumeMounts to be added to the worker pods | `nil` |
 | `worker.additionalPorts` | Additional ports to be added to worker pods | `[]` |
@@ -734,14 +723,11 @@ secrets:
 
   # Token file used if conjur instance is running in k8s or iam. E.g. /path/to/token_file
   conjurAuthnTokenFile:
-
-  # CA Certificate to specify if conjur instance is deployed with a self-signed cert
-  conjurCACert:
 ```
 
 You can specify either `conjurAuthnApiKey` that corresponds to the Conjur host OR `conjurAuthnTokenFile` if running in K8s or IAM.
 
-If your Conjur instance is deployed with a self-signed SSL certificate, you will need to set `conjurCACert` property in your `values.yaml`.
+If your Conjur instance is deployed with a self-signed SSL certificate, you will need to configure a trust bundle in `web.trust` in your `values.yaml`.
 
 #### AWS Systems Manager Parameter Store (SSM)
 
