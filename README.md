@@ -299,6 +299,9 @@ The following table lists the configurable parameters of the Concourse chart and
 | `web.trust.bundle` | The contents of a trust bundle. Web will use this to validate certificates presented by servers it reaches out to. | `nil` |
 | `web.trust.exsitingConfigMap` | The name of an existing ConfigMap with at trust bundle in the `ca.crt` key. Web will use this to validate certificates presented by servers it reaches out to. | `nil` |
 | `web.conjurUseCaCert` | Web will validate the cert presented by conjur when this is true. | `true` |
+| `web.postgresql.existingCredentialSecret` | Name of a Secret that contains postgresql username and password. | `nil` |
+| `web.postgresql.usernameSecretKey` | Key that contains the postgresql username. | `postgresql-username` |
+| `web.postgresql.passwordSecretKey` | Key that contains the postgresql password. | `postgresql-password` |
 | `worker.additionalAffinities` | Additional affinities to apply to worker pods. E.g: node affinity | `{}` |
 | `worker.additionalVolumeMounts` | VolumeMounts to be added to the worker pods | `nil` |
 | `worker.additionalPorts` | Additional ports to be added to worker pods | `[]` |

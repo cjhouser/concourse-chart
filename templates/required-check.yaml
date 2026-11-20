@@ -22,3 +22,7 @@
 {{- if and .Values.web.trust.bundle .Values.web.trust.existingConfigMap }}
 {{- required "web.trust.bundle and web.trust.exstingConfigMap are mutually exclusive" "" }}
 {{ end }}
+
+{{ if not (and .Values.web.postgresql.usernameSecretKey .Values.web.postgresql.passwordSecretKey) }}
+{{- required "Must set both web.postgresql.usernameSecretKey and web.postgresql.passwordSecretKey" "" }}
+{{ end }}
