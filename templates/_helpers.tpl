@@ -490,13 +490,13 @@ Return concourse environment variables for postgresql configuration
 - name: CONCOURSE_POSTGRES_USER
   valueFrom:
     secretKeyRef:
-      name: {{ template "concourse.web.fullname" . }}
-      key: postgresql-user
+      name: {{ .Values.web.postgresql.existingCredentialSecret | default (include "concourse.web.fullname" .) }}
+      key: {{ .Values.web.postgresql.usernameSecretKey }}
 - name: CONCOURSE_POSTGRES_PASSWORD
   valueFrom:
     secretKeyRef:
-      name: {{ template "concourse.web.fullname" . }}
-      key: postgresql-password
+      name: {{ .Values.web.postgresql.existingCredentialSecret | default (include "concourse.web.fullname" .) }}
+      key: {{ .Values.web.postgresql.passwordSecretKey }}
 {{- if .Values.concourse.web.postgres.applicationName }}
 - name: CONCOURSE_POSTGRES_APPLICATION_NAME
   value: {{ .Values.concourse.web.postgres.applicationName | quote }}

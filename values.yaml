@@ -2689,6 +2689,16 @@ web:
   ##
   conjurUseCaCert: true
 
+  postgresql:
+    ## Source postgresql username and password from an existing Secret.
+    ##
+    existingCredentialSecret: ""
+
+    ## The Secret keys that hold the username and password.
+    ##
+    usernameSecretKey: postgresql-username
+    passwordSecretKey: postgresql-password
+
 ## Configuration values for Concourse Worker components.
 ## For more information regarding the characteristics of
 ## Concourse Workers, see https://concourse-ci.org/concourse-worker.html
