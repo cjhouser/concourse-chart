@@ -46,16 +46,18 @@ metadata:
   name: {{ template "concourse.web.fullname" . }}
 spec:
   targetRefs:
-  - kind: Service
+  - group: ""
+    kind: Service
     name: {{ template "concourse.web.fullname" . }}
-    sectionName: {{ $servicePort }}
+    sectionName: atc-tls
   validation:
     {{- if .Values.concourse.web.letsEncrypt.enabled }}
     wellKnownCACertificates: System
     hostname: {{ (urlParse .Values.concourse.web.externalUrl).host }}
     {{- else }}
     caCertificateRefs:
-    - kind: ConfigMap
+    - group: ""
+      kind: ConfigMap
       name: {{ .Values.web.route.tls.trustStore }}
     hostname: {{ include "concourse.web.fullname" . | lower }}
     {{- end }}
