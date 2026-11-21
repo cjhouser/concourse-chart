@@ -25,5 +25,8 @@ data:
   {{- if .Values.web.trust.bundle }}
   ca.crt: {{ .Values.web.trust.bundle }}
   {{- end -}}
+  {{- if .Values.concourse.web.tls.caCert }}
+  client-ca.crt: {{ .Values.concourse.web.tls.caCert }}
+  {{- end -}}
 {{- end -}}
 {{- end -}}

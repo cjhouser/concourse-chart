@@ -350,9 +350,9 @@ spec:
               value: "{{ .Values.web.tlsSecretsPath }}/tls/tls.cert"
             - name: CONCOURSE_TLS_KEY
               value: "{{ .Values.web.tlsSecretsPath }}/tls/tls.key"
-            {{- if or .Values.web.trust.bundle .Values.web.trust.existingConfigMap }}
+            {{- if .Values.concourse.web.tls.caCert }}
             - name: CONCOURSE_TLS_CA_CERT
-              value: "/trust/ca.crt"
+              value: "{{ .Values.web.tlsSecretsPath }}/ca/client-ca.crt"
             {{- end }}
             {{- end }}
             {{- end }}
@@ -1671,6 +1671,11 @@ spec:
               mountPath: "{{ .Values.web.tlsSecretsPath }}/tls"
               readOnly: true
             {{- end }}
+            {{- if .Values.concourse.web.tls.caCert }}
+            - name: client-ca
+              mountPath: "{{ .Values.web.tlsSecretsPath }}/ca"
+              readOnly: true
+            {{- end }}
             {{- end }}
             {{- if .Values.concourse.web.vault.enabled }}
             - name: vault-keys
@@ -1785,5 +1790,14 @@ spec:
             items:
               - key: ca.crt
                 path: ca.crt
+        {{- end }}
+        {{- if .Values.concourse.web.tls.caCert }}
+        - name: client-ca
+          configMap:
+            name: {{ default (include "concourse.web.fullname" .) }}
+            defaultMode: 0400
+            items:
+              - key: client-ca.crt
+                path: client-ca.crt
         {{- end }}
 {{- end }}
