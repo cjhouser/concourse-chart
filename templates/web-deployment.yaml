@@ -76,6 +76,12 @@ spec:
 {{- end }}
           env:
 {{- include "concourse.postgresql.env" . | indent 12 }}
+          {{- if or .Values.web.trust.bundle .Values.web.trust.existingConfigMap }}
+          volumeMounts:
+            - name: trust
+              mountPath: /trust
+              readOnly: true
+          {{- end }}
       {{- if .Values.web.extraInitContainers }}
       {{- toYaml .Values.web.extraInitContainers | nindent 8 }}
       {{- end }}
